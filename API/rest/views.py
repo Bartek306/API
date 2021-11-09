@@ -11,23 +11,25 @@ import csv
 
 # Create your views here.
 @csrf_exempt
-def string(request):
+def api(request):
     body_unicode = request.body.decode('utf-8')
-    print("body = ", body_unicode)
     if body_unicode == "":
         return HttpResponseNotFound("Request body is empty")
     body = json.loads(body_unicode)
     data = body['message']
     type = body['type']
     data_to_send = {'message': data}
-    request = request.post("http://localhost:8000/string", data_to_send)
+    data_to_send = json.dumps(data_to_send)
+    request = requests.post("http://localhost:8000/string", data_to_send)
     dict = request.text
+    dict = json.loads(dict)
     lower = dict['lower']
     upper = dict['upper']
     special = dict['special']
     if type == "txt":
         message = "lower = {} upper = {} special = {}".format(lower, upper, special)
-        return message
+        return HttpResponse(message)
+
     if type == "json":
         response = {'upper': upper, 'lower': lower, 'special': special}
         return HttpResponse(json.dumps(response), content_type='application/json')
