@@ -1,4 +1,4 @@
-# StringAPI
+## StringAPI
 
 Counts the occurrences of lower, upper and special character in given string
 
